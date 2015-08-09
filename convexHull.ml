@@ -11,11 +11,13 @@ let sort =
 let convex_hull points =
   sort points;
   let hull = create () in
+  let aux p = 
+    let n = length hull in
+    (cross (get hull (n - 2)) (get hull (n - 1)) p) <= 0 in
 
   for i = 0 to (Array.length points) - 1 do
     let p = points.(i) in
-    while (length hull) >= 2 &&
-        (cross (get hull ((length hull) - 2)) (last hull) p) <= 0 do 
+    while (length hull) >= 2 && (aux p) do
       delete_last hull
     done;
     add hull p
@@ -25,8 +27,7 @@ let convex_hull points =
 
   for i = (Array.length points) - 2 downto 0 do
     let p = points.(i) in
-    while (length hull) >= lower + 1 &&
-        (cross (get hull ((length hull) - 2)) (last hull) p) <= 0 do 
+    while (length hull) >= lower + 1 && (aux p) do
       delete_last hull
     done;
     add hull p
